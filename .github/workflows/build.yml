@@ -1,0 +1,85 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+# One publisher at a time, so two runs on one day cannot both decide
+# that day's date tag is still free.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/trycopilotai/content-deny-server
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27"
+      - name: Test
+        run: go test ./...
+      - name: Fetch the deny list
+        run: |
+          count="$(go run ./tools/fetch-lists -out data/denylist.txt)"
+          echo "fetch-lists wrote ${count} domains" >>"$GITHUB_STEP_SUMMARY"
+          if [ "$count" -eq 0 ]; then
+            echo "fetch-lists wrote no domains" >&2
+            exit 1
+          fi
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Choose tags
+        id: tags
+        run: |
+          day="$(date -u +%Y-%m-%d)"
+          tags="${IMAGE}:sha-${GITHUB_SHA::7}"
+          # Date tags are immutable: a day that already has one keeps it.
+          # Only an answer naming this exact tag as "not found" means the tag
+          # is free.
+          # Any other failure retries, then stops the run, so a lookup
+          # error can never lead to overwriting an existing date tag.
+          state=unknown
+          for attempt in 1 2 3; do
+            if out="$(docker buildx imagetools inspect "${IMAGE}:${day}" 2>&1)"; then
+              state=exists
+              break
+            fi
+            if printf '%s\n' "$out" | grep -Fq "${IMAGE}:${day}: not found"; then
+              state=absent
+              break
+            fi
+            echo "::warning::lookup of ${IMAGE}:${day} failed (attempt ${attempt}): ${out}"
+            sleep 5
+          done
+          if [ "$state" = unknown ]; then
+            echo "::error::cannot tell whether ${IMAGE}:${day} exists; not pushing"
+            exit 1
+          fi
+          if [ "$state" = exists ]; then
+            echo "::notice::${IMAGE}:${day} exists; pushing only the sha tag"
+          else
+            tags="${tags},${IMAGE}:${day}"
+          fi
+          echo "tags=${tags}" >>"$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          # The local checkout, not the Git context: data/denylist.txt
+          # exists only here and is never committed.
+          context: .
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: org.opencontainers.image.source=https://github.com/trycopilotai/content-deny-server
