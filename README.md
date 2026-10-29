@@ -6,6 +6,7 @@ start and answers from memory. It fetches nothing at run
 time.
 
 [![build](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml)
+[![lint](https://github.com/trycopilotai/content-deny-server/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/lint.yml)
 [![refresh](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml)
 
 Release: `v0.1.0` (the Git tag). Images are tagged by commit
