@@ -5,6 +5,9 @@ content deny list? It loads a sorted list of domains once at
 start and answers from memory. It fetches nothing at run
 time.
 
+[![build](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml)
+[![refresh](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml)
+
 Release: `v0.1.0` (the Git tag). Images are tagged by commit
 and by date, not by release.
 
