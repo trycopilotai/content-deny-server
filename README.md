@@ -5,6 +5,7 @@ content deny list? It loads a sorted list of domains once at
 start and answers from memory. It fetches nothing at run
 time.
 
+[![auto-lint-pr](https://github.com/trycopilotai/content-deny-server/actions/workflows/auto-lint-pr.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/auto-lint-pr.yml)
 [![build](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml)
 [![lint](https://github.com/trycopilotai/content-deny-server/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/lint.yml)
 [![refresh](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml)
