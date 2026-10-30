@@ -1,14 +1,19 @@
 # content-deny-server
 
 An HTTP service that answers one question: is a host on the
-content deny list? It loads a sorted list of domains once at
-start and answers from memory. It fetches nothing at run
-time.
+content deny list?
+
+---
 
 [![auto-lint-pr](https://github.com/trycopilotai/content-deny-server/actions/workflows/auto-lint-pr.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/auto-lint-pr.yml)
 [![build](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/build.yml)
 [![lint](https://github.com/trycopilotai/content-deny-server/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/lint.yml)
 [![refresh](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml/badge.svg)](https://github.com/trycopilotai/content-deny-server/actions/workflows/refresh.yml)
+
+---
+
+It loads a sorted list of domains once at start and answers
+from memory. It fetches nothing at run time.
 
 Release: `v0.1.0` (the Git tag). Images are tagged by commit
 and by date, not by release.
